@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1f7a5c" />
+<title>NextCuatro</title>
+<style>
+
+  :root{
+    --bg:#f5f7f8; --card:#fff; --ink:#172026; --muted:#6d7a84; --line:#dfe5e8;
+    --accent:#1f7a5c; --accent2:#e9f5f0; --warn:#fff3d6; --danger:#b73a3a;
+    --shadow:0 8px 24px rgba(23,32,38,.08); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;background:var(--bg);color:var(--ink)}
+  button,input,select{font:inherit}
+  .app{max-width:1180px;margin:0 auto;padding:18px}
+  .topbar{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:46px;height:46px;border-radius:14px;background:var(--accent);color:white;display:grid;place-items:center;font-weight:800;font-size:22px;box-shadow:var(--shadow)}
+  h1{font-size:24px;margin:0}
+  .subtle{color:var(--muted);font-size:14px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+  button{border:0;border-radius:12px;padding:11px 14px;cursor:pointer;background:#edf1f3;color:var(--ink)}
+  button.primary{background:var(--accent);color:white;font-weight:700}
+  button.secondary{background:white;border:1px solid var(--line)}
+  button.danger{color:#fff;background:var(--danger)}
+  button.ghost{background:transparent;padding:6px 8px}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel{padding:18px}
+  .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .section-title h2{font-size:18px;margin:0}
+  .setup-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+  input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}
+  .player-add{display:grid;grid-template-columns:1.4fr .8fr auto;gap:8px;margin-top:12px}
+  .player-list{display:flex;flex-direction:column;gap:8px;max-height:54vh;overflow:auto;padding-right:2px}
+  .player-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .player-row.temp{opacity:.55}
+  .player-row.leaving{background:var(--warn)}
+  .player-name{font-weight:650}
+  .tiny{font-size:12px;color:var(--muted)}
+  .status-menu{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+  .status-menu button{padding:6px 8px;font-size:12px;border-radius:8px}
+  .left-box{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  details summary{cursor:pointer;color:var(--muted)}
+  .hero{padding:18px}
+  .hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .round-title{font-size:28px;font-weight:800}
+  .statsline{color:var(--muted);margin-top:3px}
+  .modebox{min-width:220px}
+  .courts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+  .court{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff}
+  .court h3{margin:0 0 12px;font-size:16px;color:var(--muted);letter-spacing:.02em}
+  .team{font-size:20px;font-weight:750;line-height:1.35}
+  .vs{text-align:center;color:var(--muted);font-weight:700;margin:8px 0}
+  .scorehint{font-size:12px;color:var(--muted);margin-top:10px}
+  .waiting{margin-top:14px;padding:12px 14px;border-radius:12px;background:#f1f4f5}
+  .nextbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap}
+  .nextbar .primary{font-size:18px;padding:14px 24px}
+  .empty{padding:40px 20px;text-align:center;color:var(--muted)}
+  .history{margin-top:18px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  .pill{display:inline-block;padding:7px 12px;border-radius:999px;background:var(--accent2);color:var(--accent);font-size:17px;font-weight:800}
+  .notice{margin:10px 0;padding:10px 12px;border-radius:10px;background:#fff7e6;color:#7a5b15;font-size:13px}
+  .footer-note{font-size:12px;color:var(--muted);margin-top:14px}
+
+  .result-buttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+  .result-buttons button{font-size:12px;padding:8px 10px}
+  .result-buttons button.selected{background:var(--accent);color:white;font-weight:700}
+  .timerbar{display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-top:14px;padding:12px;border-radius:14px;background:#f7f9fa;border:1px solid var(--line)}
+  .timer-display{font-size:28px;font-weight:800;min-width:90px}
+  .timerbar select{width:auto;min-width:115px}
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0 8px}
+  @media(max-width:840px){
+    .app{padding:10px}
+    .grid{grid-template-columns:1fr}
+    .courts{grid-template-columns:1fr}
+    .player-list{max-height:none}
+    .hero{padding:14px}
+    .panel{padding:14px}
+    .team{font-size:18px}
+  }
+
+  /* Phone-first refinements */
+  @media(max-width:640px){
+    body{font-size:16px}
+    .app{padding:8px}
+    .topbar{align-items:flex-start;margin-bottom:10px}
+    .brand{width:100%;align-items:flex-start}
+    .logo{width:42px;height:42px;font-size:19px;flex:0 0 auto}
+    h1{font-size:22px}
+    .subtle{font-size:13px}
+    .toolbar{width:100%}
+    .toolbar button{flex:1 1 0;min-height:44px}
+    .grid{gap:10px}
+    .card{border-radius:14px;box-shadow:none}
+    .panel,.hero{padding:12px}
+    .setup-row{grid-template-columns:1fr;gap:8px}
+    input,select{font-size:16px;min-height:44px}
+    .player-add{grid-template-columns:1fr 110px;gap:8px}
+    .player-add button{grid-column:1 / -1;min-height:46px;font-weight:700}
+    .player-row{grid-template-columns:1fr;align-items:start}
+    .status-menu{justify-content:flex-start}
+    .status-menu button{min-height:38px;padding:8px 10px}
+    .hero-head{display:block}
+    .round-title{font-size:24px}
+    .modebox{min-width:0;margin-top:12px}
+    .timerbar{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px;padding:10px}
+    .timerbar>div:first-child{grid-column:1 / -1}
+    .timer-display{font-size:30px;min-width:0;text-align:center}
+    .timerbar button{min-height:44px}
+    .timerbar .tiny{grid-column:1 / -1}
+    .courts{gap:10px;margin-top:12px}
+    .court{padding:13px}
+    .court h3{font-size:14px;margin-bottom:10px}
+    .team{font-size:20px;line-height:1.3}
+    .vs{margin:6px 0}
+    .result-buttons{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+    .result-buttons button{width:100%;min-height:44px;font-size:14px;line-height:1.2;text-align:left}
+    .waiting{font-size:14px}
+    .nextbar{display:block}
+    .nextbar .primary{width:100%;min-height:54px;font-size:19px;margin-top:10px}
+    .nextbar .subtle{font-size:13px}
+    .history{margin-top:10px}
+    table{font-size:13px;min-width:580px}
+    th,td{padding:8px}
+    .footer{padding-bottom:max(12px, env(safe-area-inset-bottom))}
+  }
+
+
+  .logo-img{
+    object-fit:cover;
+    padding:0;
+    overflow:hidden;
+    border-radius:14px;
+    background:#071f43;
+  }
+
+
+
+/* v4.1.1 — v3.1 layout preserved; only branding/compact-control additions */
+:root{
+  --accent:#8fce32;
+  --accent2:#eef8df;
+}
+body{background:#f5f7f8}
+.topbar{
+  background:#123b5d;
+  margin:-18px -18px 18px;
+  padding:15px 18px;
+  border-bottom:4px solid #8fce32;
+  color:white;
+  border-radius:0 0 16px 16px;
+}
+.topbar h1{color:white}
+.topbar .subtle,.topbar .tiny{color:#dce9f1}
+.topbar .logo{
+  width:82px;height:82px;
+  border-radius:14px;
+  box-shadow:none;
+  background:#123b5d;
+}
+.topbar .toolbar .secondary{
+  background:white;
+  border-color:white;
+  color:#123b5d;
+}
+.modebox{
+  min-width:0;
+  display:flex;
+  align-items:end;
+  gap:8px;
+}
+.modebox label{white-space:nowrap;margin-bottom:11px}
+.modebox select{width:auto;min-width:170px}
+.status-menu select{
+  width:auto;
+  min-width:110px;
+  padding:6px 8px;
+  font-size:12px;
+  min-height:32px;
+}
+.status-menu button.selected{
+  background:var(--accent);
+  color:#17321a;
+  font-weight:700;
+}
+button.primary{color:#17321a}
+.court{border-top:3px solid var(--accent)}
+@media(max-width:840px){
+  .topbar{margin:-10px -10px 10px;padding:13px 12px}
+}
+@media(max-width:640px){
+  .app{width:100%;max-width:100%;overflow-x:hidden}
+  .topbar{
+    margin:-8px -8px 10px;
+    padding:12px 10px;
+    border-radius:0 0 14px 14px;
+  }
+  .topbar .brand{width:100%;align-items:center}
+  .topbar .logo{width:72px;height:72px;flex:0 0 72px}
+  .topbar h1{font-size:23px}
+  .topbar .subtle{font-size:13px}
+  .modebox{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    align-items:center;
+    width:100%;
+    margin-top:10px;
+  }
+  .modebox label{margin:0}
+  .modebox select{width:100%;min-width:0}
+  .status-menu{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+    gap:6px;
+  }
+  .status-menu button,.status-menu select{
+    width:100%;
+    min-width:0;
+    min-height:42px;
+    font-size:13px;
+  }
+  .player-row{overflow:hidden}
+  .court,.card,.panel,.hero{max-width:100%}
+  .nextbar{
+    position:sticky;
+    bottom:0;
+    z-index:8;
+    background:white;
+    padding:8px 0 max(6px,env(safe-area-inset-bottom));
+  }
+}
+@media(max-width:380px){
+  .topbar .logo{width:64px;height:64px;flex-basis:64px}
+  .status-menu{grid-template-columns:1fr}
+}
+
+
+/* v4.1.2 iPhone width fix */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+img,svg{max-width:100%;height:auto}
+.app,.grid,.card,.panel,.hero,.topbar,.brand,.toolbar,.setup-row,
+.player-add,.player-list,.player-row,.section-title,.hero-head,.modebox,
+.timerbar,.courts,.court,.waiting,.nextbar,.history,.footer{
+  min-width:0;
+  max-width:100%;
+}
+.card,.panel,.hero,.court,.player-row{overflow-wrap:anywhere}
+input,select,button{max-width:100%}
+@media(max-width:640px){
+  .app{padding:8px;width:100vw;max-width:100vw}
+  .topbar{width:auto;max-width:none;margin-left:-8px;margin-right:-8px}
+  .grid{width:100%;min-width:0}
+  .panel,.hero{width:100%;min-width:0}
+  .setup-row,.player-add,.player-row,.hero-head,.timerbar,.courts,.nextbar{width:100%;min-width:0}
+  .section-title{width:100%;min-width:0}
+  .player-add{grid-template-columns:minmax(0,1fr) 104px}
+  .player-add input,.player-add select{min-width:0;width:100%}
+  .status-menu{max-width:100%;overflow:hidden}
+  .status-menu select{min-width:0!important;width:100%!important;max-width:100%!important}
+  .modebox{grid-template-columns:max-content minmax(0,1fr)!important}
+  .modebox select{min-width:0!important;width:100%!important}
+  .footer-note,.tiny,.subtle{max-width:100%;overflow-wrap:anywhere}
+  .history{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:580px;max-width:none}
+}
+
+
+/* v4.2 layout correction */
+.grid > *, main, aside{min-width:0}
+.player-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;
+}
+.player-row > div:first-child{
+  min-width:0!important;
+  width:100%!important;
+}
+.player-name,.player-row .tiny{
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+.status-menu{
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:6px!important;
+  justify-content:stretch!important;
+}
+.status-menu button,.status-menu select{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  white-space:normal!important;
+}
+.history{min-width:0!important;overflow:hidden!important}
+.history > div:last-child{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  -webkit-overflow-scrolling:touch;
+}
+.history table{
+  width:100%!important;
+  min-width:560px!important;
+  max-width:none!important;
+}
+@media(max-width:840px){
+  html,body{overflow-x:hidden!important}
+  .app{width:100%!important;max-width:100%!important}
+  .grid,main,aside,.card,.panel,.hero{width:100%!important;max-width:100%!important;min-width:0!important}
+}
+@media(max-width:640px){
+  .app{width:100%!important;max-width:100%!important;padding:8px!important}
+  .topbar{width:calc(100% + 16px)!important;max-width:none!important}
+  .player-add{grid-template-columns:minmax(0,1fr) 110px!important}
+  .status-menu{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .history table{min-width:540px!important;width:540px!important}
+}
+@media(max-width:390px){
+  .status-menu{grid-template-columns:1fr!important}
+}
+
+
+/* v4.2 — compact desktop court cards only */
+@media (min-width:841px){
+  .courts{gap:12px!important}
+  .court{padding:10px 16px!important;min-height:0!important}
+  .court h3{margin:0 0 6px!important}
+  .court .match{gap:2px!important}
+  .court .team{padding:1px 0!important}
+  .court .vs{margin:0!important;line-height:1!important}
+  .court .result-row{margin-top:6px!important;gap:8px!important}
+  .court .result-row button{padding:6px 10px!important}
+  .nextbar{margin-top:10px!important;padding-top:0!important}
+}
+
+
+  .team-pick{display:block;width:100%;border:0;background:transparent;color:inherit;text-align:left;padding:5px 7px;border-radius:10px;font:inherit;font-weight:750;cursor:pointer}
+  #nextRoundBtn{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  #nextRoundBtn .next-logo{width:24px;height:24px;object-fit:contain;border-radius:5px;flex:0 0 auto}
+  .team-pick:hover{background:#f1f4f5}
+  .team-pick.selected{background:#eef9ef;color:var(--navy);outline:1.5px solid var(--accent);}
+  .team-pick .team-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+  .team-pick .winner-label{margin-left:auto;color:var(--navy);font-weight:850;font-size:.78em;letter-spacing:.06em;white-space:nowrap}
+  .vs{display:block;width:100%;text-align:left!important;padding-left:5ch!important;box-sizing:border-box;margin-left:0!important;margin-right:0!important}
+  #activeCountPill{color:#102d51!important;font-weight:850!important}
+  .timer-display.timer-ended{font-size:24px;line-height:1.05;min-width:220px;text-align:center;animation:timerFlash .8s ease-in-out infinite alternate;color:#b42318}
+  @keyframes timerFlash{from{opacity:1;transform:scale(1)}to{opacity:.42;transform:scale(1.04)}}
+
+
+  [hidden]{display:none!important}
+  .g2-controls{max-width:1100px;margin:0 auto 14px;display:flex;flex-direction:column;gap:12px}
+  .g2-mode-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .g2-mode-row select{max-width:200px}.g2-pending{color:#8b4600;font-weight:700}
+  .g2-court-setup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+  .g2-court-choice{padding:8px;border:1px solid #d5dce5;border-radius:9px}
+  .g2-court-choice label{display:block;font-weight:700;margin-bottom:5px}
+  .g2-court-choice select{width:100%;min-width:0}
+  .g2-zone{border:2px solid var(--zone);border-radius:12px;margin:12px 0;padding:12px;background:#fff}
+  .g2-zone-head{border-left:9px solid var(--zone);padding:7px 10px;margin-bottom:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .g2-zone h3{margin:0;color:#12345a;font-size:19px}.g2-zone-courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+  .g2-next{width:100%;margin-top:12px;padding:14px 8px;border:4px solid #102a43;border-radius:12px;background:var(--zone);color:var(--ink);font-size:20px;font-weight:800;cursor:pointer}
+  .g2-next:disabled{opacity:.55;cursor:not-allowed}.g2-zone-wait{font-size:14px;margin:8px 0}.g2-roster-tag{font-size:12px;font-weight:700;margin-left:4px}
+  .g2-mobile-zone{display:none}.g2-unassigned{padding:10px;border:1px dashed #a9b3bd;border-radius:9px;margin:12px 0}
+  @media(max-width:700px){.g2-court-setup{grid-template-columns:repeat(2,minmax(0,1fr))}.g2-mobile-zone{display:block;margin:8px 0}.g2-zone[data-hidden-mobile="true"]{display:none}.g2-zone-courts{grid-template-columns:1fr}.g2-next{font-size:19px}}
+  /* Current features description */
+  .features-panel{max-width:1100px;margin:16px auto 0;padding:0 16px}
+  .features-panel details{background:var(--card, #fff);border:1px solid #d8e0e7;border-radius:12px;overflow:hidden}
+  .features-panel summary{cursor:pointer;padding:15px 18px;font-weight:750;color:#12345a;list-style-position:inside}
+  .features-panel summary:focus-visible{outline:3px solid #8dbf36;outline-offset:-3px}
+  .features-content{padding:0 20px 16px;color:#263e52;font-size:14px;line-height:1.55}
+  .features-content h3{font-size:14px;color:#12345a;margin:14px 0 5px}
+  .features-content ul{margin:0 0 8px;padding-left:22px}
+  .features-content li{margin:3px 0}
+  .features-content .feature-version{font-size:12px;color:#566777}
+
+  .nc-modal-backdrop[hidden]{display:none!important}
+  .nc-modal-backdrop{position:fixed;inset:0;z-index:99999;background:rgba(10,25,45,.65);display:flex;align-items:center;justify-content:center;padding:20px}
+  .nc-modal{background:#fff;color:#1b344f;border-radius:16px;padding:24px;width:min(100%,460px);box-shadow:0 15px 45px rgba(0,0,0,.28);line-height:1.5}
+  .nc-modal h2{font-size:21px;color:#12345a;margin:0 0 14px}
+  .nc-modal p{margin:0 0 14px}
+  .nc-modal-actions{display:flex;flex-direction:column;gap:10px;margin:20px 0 12px}
+  .nc-modal-actions button{width:100%;min-height:44px;white-space:normal}
+  .nc-modal-footnote{font-size:12px;color:#5b6875;margin-bottom:0!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <img class="logo logo-img" src="nextcuatro-logo.png" alt="NextCuatro logo">
+      <div>
+        <h1>NextCuatro</h1>
+        <div class="subtle">Flexible. Smart. Adaptive.</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="secondary" id="resetBtn">New Session / Clear Everything</button>
+      
+    </div>
+  </div>
+
+  <section class="g2-controls card panel">
+ <div class="g2-mode-row"><strong>Session mode</strong><select id="sessionMode"><option value="mixer">Mixer Mode</option><option value="zoned">Zoned Mode</option></select><span id="modePending" class="g2-pending" hidden>Mode change pending — finish current games, then apply.</span><button id="applyMode" class="primary" hidden>Apply Mode Change</button><button id="cancelMode" class="secondary" hidden>Cancel</button></div>
+ <details id="courtSetup" hidden><summary><strong>Zoned Court Setup</strong> — assign courts to skill groups</summary><div id="zoneCourtSetup" class="g2-court-setup"></div></details>
+ </section>
+ <div class="grid">
+    <aside class="card panel">
+      <div class="section-title">
+        <h2>Available Courts</h2>
+        <span class="pill" id="activeCountPill">0 active</span>
+      </div>
+      <div class="setup-row">
+        <div>
+          <input id="courtCount" type="number" min="1" max="8" value="4">
+        </div>
+        <div style="display:none">
+          <label>Court availability</label>
+          <select id="sessionEndType">
+            <option value="open">Open-ended</option>
+            <option value="until">Reserved until…</option>
+          </select>
+        </div>
+      </div>
+      <div id="endTimeWrap" style="display:none!important;margin-top:10px">
+        <label>Reserved until</label>
+        <input id="endTime" type="time">
+      </div>
+
+      <div class="section-title" style="margin-top:20px">
+        <h2>Players</h2>
+      </div>
+      <div class="player-add">
+        <input id="playerName" placeholder="Name or nickname">
+        <select id="playerSkill" title="Skill rating">
+          <option value="">Unrated</option>
+          <option>1.0</option><option>1.25</option><option>1.5</option><option>1.75</option><option>2.0</option><option>2.25</option><option>2.5</option><option>2.75</option><option>3.0</option><option>3.25</option><option>3.5</option><option>3.75</option><option>4.0</option><option>4.25</option><option>4.5</option><option>4.75</option><option>5.0</option><option value="5.25">5.0+</option>
+        </select>
+        <button class="primary" id="addPlayerBtn">Add</button>
+      </div>
+      <div id="duplicateNotice" class="notice" style="display:none"></div>
+
+      <div class="player-list" id="playerList" style="margin-top:12px"></div>
+
+      <div class="left-box">
+        <details>
+          <summary id="leftSummary">Left session (0)</summary>
+          <div id="leftList" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div>
+        </details>
+      </div>
+
+      <div class="footer-note"></div>
+    </aside>
+
+    <main>
+      <section class="card hero">
+        <div class="hero-head">
+          <div>
+            <div class="round-title" id="roundTitle">Ready to start</div>
+            <div class="statsline" id="statsLine">Add players, choose a mode, then create the first game.</div>
+          </div>
+          <div class="modebox">
+            <label>Shuffle mode</label>
+            <select id="modeSelect">
+              <option value="smart">Smart Random</option>
+              <option value="similar">Similar Skill</option>
+              <option value="balanced">Balanced Teams</option>
+              
+            </select>
+          </div>
+        </div>
+
+        <div class="timerbar">
+          <div><label>Round timer</label>
+            <select id="timerMinutes">
+              <option value="10">10 minutes</option>
+              <option value="12" selected>12 minutes</option>
+              <option value="15">15 minutes</option>
+            </select>
+          </div>
+          <div class="timer-display" id="timerDisplay">12:00</div>
+          <button class="secondary" id="timerStartBtn">Start</button>
+          <button class="secondary" id="timerResetBtn">Reset</button>
+        </div>
+        <div id="courtArea" class="courts"></div><div id="zoneArea" hidden></div>
+        <div id="emptyState" class="empty">
+          NextCuatro will build court assignments from whoever is <strong>Active</strong> when you press Next Cuatro.
+        </div>
+
+        <div id="waitingBox" class="waiting" style="display:none"></div>
+
+        <div class="nextbar">
+          <div class="subtle" id="reservationNote" style="display:none"></div>
+          <button class="primary" id="nextRoundBtn"><img class="next-logo" src="nextcuatro-logo.png" alt="">Next Cuatro!</button>
+        </div>
+      </section>
+
+      <section class="card panel history">
+        <div class="section-title">
+          <h2>Session fairness</h2>
+        </div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Player</th><th>Played</th><th>Sat</th><th>Record</th><th>Adaptive rating</th><th>Different partners</th><th>Status</th></tr>
+            </thead>
+            <tbody id="statsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<section class="features-panel" aria-label="NextCuatro features and instructions">
+  <details id="featuresHelp">
+    <summary>Click here to expand a description of the app's current features</summary>
+    <div class="features-content"><h3>Generation 2 — Mixer and Zoned Modes</h3><p><strong>Mixer Mode</strong> retains Generation 1 rotation methods, timers, fixed partners, fair sit-outs, and results. Player names are alphabetical.</p><p><strong>Zoned Mode</strong> lets the organizer assign each of eight courts to one of five rating groups: Developing (2.0–2.99), Intermediate 1 (3.0–3.49), Intermediate 2 (3.5–3.99), Advanced (4.0–4.49), and Elite (4.5+). Each zone has its own Next Cuatro! button and round counter, with no timer. Entered ratings determine zones; adaptive ratings do not move players. Results and session statistics are retained. Select a different session mode, then explicitly apply it after games finish.</p>
+      <p class="feature-version">NextCuatro · Generation 2 · v1.0 Alpha · Flexible. Smart. Adaptive.</p>
+      <p><strong>NextCuatro</strong> organizes rotating pickleball games with flexibility and fairness. Players can arrive, take breaks, leave, pair or unpair, rotate by skill level, and track wins and losses—all while the app adapts to changing attendance. Set the number of available courts, choose a rotation mode, add players (with optional skill ratings), and press <strong>Next Cuatro!</strong> to generate the next round.</p>
+      <h3>Players &amp; availability</h3>
+      <ul>
+        <li>Add players before or during a session; new players receive priority in the next rotation when space permits, without catching up on earlier sit-outs.</li>
+        <li>Choose a self-reported skill level, or leave a player Unrated.</li>
+        <li>Pair two players who want to play together, or unpair them.</li>
+        <li>Use Sit Out for a one-game break, or Leave when someone is done for the session.</li>
+        <li>See the number of active players at a glance. NextCuatro has been tested with up to 50 active players; additional players are allowed after a one-time warning, but larger sessions are not yet validated.</li>
+      </ul>
+      <h3>Rotation modes</h3>
+      <ul>
+        <li><strong>Smart Random:</strong> rotates players while considering sit-out fairness and teammate variety.</li>
+        <li><strong>Similar Skill:</strong> groups players with broadly similar skill levels.</li>
+        <li><strong>Balanced Teams:</strong> aims to create competitive, evenly matched teams by keeping the sum of player ratings similar on each side.</li>
+        <li>Adjust the number of available courts as attendance changes.</li>
+      </ul>
+      <h3>Fairness &amp; fixed pairs</h3>
+      <ul>
+        <li>Rotation considers arrival-adjusted scheduling sit-outs, voluntary breaks, and consecutive games played; displayed sit-out totals are always actual counts. The app avoids repeat assigned breaks while eligible players have fewer sit-outs whenever pairing and court capacity permit.</li>
+        <li>Fixed pairs normally play together and, when possible, sit out together.</li>
+        <li>When a one-person break would unfairly favor a fixed pair, the organizer may be asked whether to separate the pair temporarily for two games. Each partner takes one actual break; after either declining or completing an approved two-game separation, the organizer is not asked again until every active solo player has taken another break. Actual sit-out totals are always preserved, even when a pair declines several times. Pairing and unpairing can be changed during a session.</li>
+      </ul>
+      <h3>Games, results &amp; ratings</h3>
+      <ul>
+        <li>Press <strong>Next Cuatro!</strong> to generate the next game and court assignments.</li>
+        <li>Tap the winning team to record a result; the winner is highlighted.</li>
+        <li>Review games played, sit-outs, wins and losses, and partner variety in Session fairness.</li>
+        <li>Adaptive ratings can be toggled on or off for each player. Players who enter a baseline skill rating can have their rating adjusted upward or downward based on recorded wins and losses against other rated players. Players without a baseline rating cannot participate in adaptive rating adjustments.</li>
+      </ul>
+      <h3>Timer &amp; session controls</h3>
+      <ul>
+        <li>Play using modified rally scoring to help games finish at approximately the same time, or use the optional 10-, 12-, or 15-minute game timer. Start, pause, or reset the timer as needed. The timer automatically resets and stops when the next round is generated.</li>
+        <li>At zero, hear the end-of-game chimes and see the end-of-game message.</li>
+        <li>Next Cuatro! resets and stops the timer for the new game; it does not start automatically.</li>
+        <li>Session data is stored in this browser on this device. Clearing browser data may remove it.</li>
+        <li>New Session / Clear Everything requires confirmation and erases the current session.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+<div class="footer">NextCuatro · Generation 2 · v1.0 Alpha · © 2026 Todd Witte</div>
+
+<div id="pairFairnessModal" class="nc-modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="pairFairnessTitle">
+  <div class="nc-modal">
+    <h2 id="pairFairnessTitle">Fixed pair: sit-out fairness</h2>
+    <p id="pairFairnessDescription"></p>
+    <div class="nc-modal-actions">
+      <button id="pairFairnessYes" type="button">Yes, separate for two games</button>
+      <button id="pairFairnessNo" type="button" class="secondary">No, keep them together</button>
+    </div>
+    <p class="nc-modal-footnote">If approved, each partner sits out one of the next two games, then they play together again.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'nextcuatro_g2_v1_state';
+  const defaultState = {
+    sessionMode:'mixer', pendingMode:null, zoneCourts:['developing','developing','int1','int1','int2','int2','advanced',null], zoneRounds:{}, zonePools:{},
+    round: 0,
+    courts: 4,
+    endType: 'open',
+    endTime: '',
+    mode: 'smart',
+    timerMinutes: 12,
+    players: [],
+    currentRound: null
+  };
+  let state = load();
+  const ZONES=[{id:'developing',name:'Developing',color:'#22C55E',ink:'#102A43'},{id:'int1',name:'Intermediate 1',color:'#FFF176',ink:'#102A43'},{id:'int2',name:'Intermediate 2',color:'#D99A00',ink:'#102A43'},{id:'advanced',name:'Advanced',color:'#F97316',ink:'#102A43'},{id:'elite',name:'Elite',color:'#DC2626',ink:'#fff'}];
+  const zoneFor=p=>p.skill==null?null:p.skill>=4.5?'elite':p.skill>=4?'advanced':p.skill>=3.5?'int2':p.skill>=3?'int1':p.skill>=2?'developing':null;
+  const zoneName=id=>ZONES.find(z=>z.id===id)?.name||'Unassigned';
+  const zoneColor=id=>ZONES.find(z=>z.id===id)?.color||'#94a3b8';
+  const isZoned=()=>state.sessionMode==='zoned';
+  const currentPlayingIds=()=>new Set(Object.values(state.zoneRounds||{}).flatMap(r=>(r.currentRound?.courts||[]).flat(2)));
+  function currentZone(p){return state.zonePools?.[p.id]===undefined?zoneFor(p):state.zonePools[p.id]}
+  function normalizeZonePools(){state.zonePools=state.zonePools||{};for(const p of state.players){if(!(p.id in state.zonePools))state.zonePools[p.id]=zoneFor(p)}}
+
+
+  const $ = id => document.getElementById(id);
+  const uid = () => Math.random().toString(36).slice(2,10);
+
+  function load(){
+    try{
+      const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return s ? {...defaultState, ...s} : structuredClone(defaultState);
+    }catch(e){ return structuredClone(defaultState); }
+  }
+  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  state.players=(state.players||[]).map(p=>({
+    wins:0,losses:0,partners:{},opponents:{},played:0,sat:0,lastSatRound:-999,
+    joinedRound:0,fairnessOffset:0,firstGamePriority:false,status:'active',fixedPartnerId:null,sitNext:false,playStreak:0,
+    adaptiveRating:null,resultGames:0,...p
+  }));
+  state.players.forEach(p=>{
+  if(p.status==='leaving') p.status='active';
+  if(p.skill==null && (p.resultGames||0)===0) p.adaptiveRating=null;
+  else if(p.adaptiveRating==null && p.skill!=null) p.adaptiveRating=p.skill;
+  if(p.useAdaptive==null) p.useAdaptive=false;
+});
+
+  function activePlayers(){
+    return state.players.filter(p => (p.status === 'active' || p.status === 'leaving') && !p.sitNext);
+  }
+  function normalizedName(s){ return s.trim().replace(/\s+/g,' ').toLowerCase(); }
+  function rating(p){ return (p.useAdaptive!==false && Number.isFinite(p.adaptiveRating)) ? p.adaptiveRating : (p.skill ?? 3.0); }
+
+  // Arrival-adjusted scheduling score. Actual sit-out totals remain untouched.
+  function schedulingSit(p){ return (p.sat||0)+(p.fairnessOffset||0); }
+  function arrivalBaseline(excludeId){
+    const peers=state.players.filter(p=>p.id!==excludeId && (p.status==='active'||p.status==='leaving'));
+    if(!peers.length)return 0;
+    const sorted=peers.map(schedulingSit).sort((a,b)=>a-b);
+    const mid=Math.floor(sorted.length/2);
+    return sorted.length%2 ? sorted[mid] : (sorted[mid-1]+sorted[mid])/2;
+  }
+
+  // Capacity advisory, not a registration limit. Warn once per session when
+  // the active roster first grows beyond the range exercised in stress tests.
+  const TESTED_ACTIVE_PLAYERS=50;
+  function activeRosterCount(){
+    return state.players.filter(p=>p.status==='active'||p.status==='leaving').length;
+  }
+  function warnIfBeyondTestedRange(){
+    if(activeRosterCount()<=TESTED_ACTIVE_PLAYERS || state.over50WarningShown) return;
+    state.over50WarningShown=true;
+    alert('NextCuatro has been tested with up to 50 active players. You can continue adding players, but larger groups have not been fully tested and rotations may be slower or behave unexpectedly.');
+  }
+
+  function addPlayer(){
+    const raw = $('playerName').value.trim().replace(/\s+/g,' ');
+    if(!raw) return;
+    const dup = state.players.some(p => normalizedName(p.name) === normalizedName(raw));
+    if(dup){
+      $('duplicateNotice').style.display = 'block';
+      $('duplicateNotice').textContent = `${raw} is already used in this session. Add a last initial or nickname.`;
+      return;
+    }
+    $('duplicateNotice').style.display = 'none';
+    const skill = $('playerSkill').value ? Number($('playerSkill').value) : null;
+    state.players.push({
+      id:uid(), name:raw, skill, status:'active',
+      played:0, sat:0, lastSatRound:-999, joinedRound:state.round,
+      fairnessOffset:arrivalBaseline(null), firstGamePriority:true,
+      partners:{}, opponents:{}, wins:0, losses:0,
+      fixedPartnerId:null, sitNext:false, playStreak:0, adaptiveRating:skill, resultGames:0, useAdaptive:false
+    });
+    $('playerName').value='';
+    $('playerSkill').value='';
+    warnIfBeyondTestedRange();
+    normalizeZonePools(); save(); render();
+  }
+
+  function setSkill(id,value){
+    const p=state.players.find(x=>x.id===id);
+    if(!p) return;
+    const newSkill=value===''?null:Number(value);
+    p.skill=Number.isFinite(newSkill)?newSkill:null;
+    // If no adaptive estimate has actually developed yet, use the newly
+    // entered self-rating as its starting estimate. Preserve learned ratings.
+    if((p.resultGames||0)<=3 || !Number.isFinite(p.adaptiveRating)) p.adaptiveRating=p.skill;
+    if(isZoned()){
+      const playing=currentPlayingIds().has(p.id);
+      if(!playing)moveToZone(p,zoneFor(p));
+      else p.pendingZone=zoneFor(p);
+    }
+    save(); render();
+  }
+
+  function setStatus(id,status){
+    const p = state.players.find(x=>x.id===id);
+    if(!p) return;
+    if(!p) return;
+    if(status==='active' && p.status!=='active' && p.status!=='leaving'){
+      // Rejoining starts a fresh scheduling opportunity, not a statistics reset.
+      p.fairnessOffset=arrivalBaseline(id)-(p.sat||0);
+      p.firstGamePriority=true;
+    }
+    p.status = status;
+    if(status==='active') warnIfBeyondTestedRange();
+    if(status==='active') $('duplicateNotice').style.display='none';
+    if(status!=='active' && state.temporaryPair?.ids.includes(id)) state.temporaryPair=null;
+    if(status!=='active') p.sitNext=false;
+    save(); render();
+  }
+
+  function toggleSit(id){
+    const p=state.players.find(x=>x.id===id);
+    if(!p) return;
+    const next=!p.sitNext;
+    p.sitNext=next;
+    if(next && state.temporaryPair?.ids.includes(id)) state.temporaryPair=null;
+    // A fixed pair is a team in every mode; voluntary Sit Out applies to both.
+    if(p.fixedPartnerId){
+      const q=state.players.find(x=>x.id===p.fixedPartnerId);
+      if(q && (q.status==='active'||q.status==='leaving')) q.sitNext=next;
+    }
+    save();render();
+  }
+
+  function setPair(id,partnerId){
+    state.temporaryPair=null;
+    state.pairPromptDeclinedAt={};
+    const p=state.players.find(x=>x.id===id);
+    if(!p) return;
+    if(p.fixedPartnerId){
+      const old=state.players.find(x=>x.id===p.fixedPartnerId);
+      if(old && old.fixedPartnerId===p.id) old.fixedPartnerId=null;
+      p.fixedPartnerId=null;
+    }
+    if(partnerId && isZoned()){
+      const q=state.players.find(x=>x.id===partnerId);
+      if(q && currentZone(q)!==currentZone(p)){
+        alert('Fixed partners must belong to the same skill zone. Adjust their entered ratings first.');
+        save();render();return;
+      }
+    }
+    if(partnerId){
+      const q=state.players.find(x=>x.id===partnerId);
+      if(!q || q.id===p.id) return;
+      if(q.fixedPartnerId){
+        const old=state.players.find(x=>x.id===q.fixedPartnerId);
+        if(old && old.fixedPartnerId===q.id) old.fixedPartnerId=null;
+        q.fixedPartnerId=null;
+      }
+      p.fixedPartnerId=q.id; q.fixedPartnerId=p.id;
+    }
+    save();render();
+  }
+
+  function restorePlayer(id){
+    const p = state.players.find(x=>x.id===id);
+    if(p){ setStatus(id,'active'); p.sitNext=false; save(); render(); }
+  }
+
+  function incrementMap(obj,key){ obj[key]=(obj[key]||0)+1; }
+  function partnerCount(a,b){ return a.partners[b.id] || 0; }
+  function opponentCount(a,b){ return a.opponents[b.id] || 0; }
+
+  function shuffle(arr){
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function teamPairings(group){
+    const [a,b,c,d]=group;
+    return [[[a,b],[c,d]],[[a,c],[b,d]],[[a,d],[b,c]]];
+  }
+  function teamTotal(team){ return team.reduce((s,p)=>s+rating(p),0); }
+  function teamBalanceCost(pairing){ return Math.abs(teamTotal(pairing[0])-teamTotal(pairing[1])); }
+  function repeatCost(pairing, opponentWeight=.35){
+    const [[a,b],[c,d]]=pairing;
+    let cost=(partnerCount(a,b)+partnerCount(c,d))*10;
+    for(const x of [a,b]) for(const y of [c,d]) cost += opponentCount(x,y)*opponentWeight;
+    return cost;
+  }
+  function respectsFixed(pairing){
+    for(const team of pairing){
+      for(const p of team){
+        if(effectivePartnerId(p) && !team.some(x=>x.id===effectivePartnerId(p))) return false;
+      }
+    }
+    return true;
+  }
+  function bestTeams(group, mode){
+    const valid=teamPairings(group).filter(respectsFixed);
+    const options=valid.length?valid:[];
+    if(!options.length) return null;
+    let best=options[0], bestCost=Infinity;
+    for(const opt of options){
+      let cost=repeatCost(opt,.4);
+      if(mode==='balanced'){
+        const diff=teamBalanceCost(opt);
+        cost += diff<=.25 ? diff*2 : diff<=.5 ? 2+diff*5 : 20+diff*20;
+      } else if(mode==='similar'){
+        cost += teamBalanceCost(opt)*2;
+      } else {
+        cost += teamBalanceCost(opt)*.05; // Smart Random is not skill-driven.
+      }
+      cost += Math.random()*.25;
+      if(cost<bestCost){best=opt;bestCost=cost;}
+    }
+    return best;
+  }
+  function groupRepeatCost(group){
+    let c=0;
+    for(let i=0;i<group.length;i++) for(let j=i+1;j<group.length;j++)
+      c += partnerCount(group[i],group[j])*4 + opponentCount(group[i],group[j]);
+    return c;
+  }
+
+  // A fixed team may be temporarily separated, only with organizer approval.
+  let pairSeparationPaused=false;
+  function effectivePartnerId(p){
+    if(!p.fixedPartnerId) return null;
+    const partner=state.players.find(x=>x.id===p.fixedPartnerId);
+    // A departed or unavailable partner must not make the remaining player
+    // impossible to schedule. Keep the pairing preference for a later return.
+    if(!partner || !['active','leaving'].includes(partner.status) || partner.sitNext) return null;
+    if(pairSeparationPaused) return p.fixedPartnerId;
+    const t=state.temporaryPair;
+    if(t && t.remaining>0 && t.ids.includes(p.id)) return null;
+    return p.fixedPartnerId;
+  }
+
+  // Pair fairness: historical sit-outs are displayed unchanged. A late arrival
+  // cannot veto a pair invitation merely because they have a smaller raw count.
+  // Each invitation stores a snapshot of eligible solo players' adjusted sit-outs;
+  // another invitation is allowed only after those same players have sat again.
+  let pairPromptPending=false;
+  function maybeSuggestPairBreak(actives,capacity){
+    if(pairPromptPending || state.temporaryPair?.remaining>0) return false;
+    if(actives.length<=capacity) return false;
+    const pairs=makeUnits(actives).filter(u=>u.length===2);
+    const solos=actives.filter(p=>!p.fixedPartnerId);
+    if(!solos.length || !pairs.length) return false;
+    const soloScores=solos.map(schedulingSit).sort((a,b)=>a-b);
+    const mid=Math.floor(soloScores.length/2);
+    const typicalSoloSit=soloScores.length%2 ? soloScores[mid] : (soloScores[mid-1]+soloScores[mid])/2;
+    state.pairPromptDeclinedAt ||= {};
+    const due=pairs.find(u=>{
+      const key=u.map(p=>p.id).sort().join(':');
+      const previous=state.pairPromptDeclinedAt[key];
+      if(!u.every(p=>schedulingSit(p)<typicalSoloSit-0.00001)) return false;
+      if(previous && typeof previous==='object'){
+        const snapshot=previous.solos||{};
+        const stillHere=solos.filter(p=>Object.prototype.hasOwnProperty.call(snapshot,p.id));
+        // The same incumbent solo players must each have sat once since the
+        // last invitation. Newly arrived players do not cause catch-up delays.
+        if(stillHere.length && !stillHere.every(p=>schedulingSit(p)>snapshot[p.id]+0.00001))return false;
+        if(!stillHere.length && typicalSoloSit<=previous.median+0.00001)return false;
+      }else if(typeof previous==='number' && typicalSoloSit<=previous+0.00001){
+        return false; // backward compatibility with saved v5.12 sessions
+      }
+      return true;
+    });
+    if(!due)return false;
+    const [a,b]=due,key=due.map(p=>p.id).sort().join(':');
+    pairPromptPending=true;
+    const modal=$('pairFairnessModal');
+    $('pairFairnessDescription').textContent=`${a.name} and ${b.name} are due for a break. To keep sit-outs fair, would you like to temporarily separate them for the next two games?`;
+    modal.hidden=false;
+    const finish=approved=>{
+      modal.hidden=true;
+      pairPromptPending=false;
+      state.pairPromptDeclinedAt[key]={median:typicalSoloSit,solos:Object.fromEntries(solos.map(p=>[p.id,schedulingSit(p)]))};
+      if(approved)state.temporaryPair={ids:[a.id,b.id],remaining:2};
+      save();makeRound(true);
+    };
+    $('pairFairnessYes').onclick=()=>finish(true);
+    $('pairFairnessNo').onclick=()=>finish(false);
+    $('pairFairnessYes').focus();
+    return true;
+  }
+
+  function makeUnits(players){
+    const ids=new Set(players.map(p=>p.id)), used=new Set(), units=[];
+    for(const p of players){
+      if(used.has(p.id)) continue;
+      const q=effectivePartnerId(p) ? state.players.find(x=>x.id===effectivePartnerId(p)) : null;
+      if(q && ids.has(q.id) && !used.has(q.id)){
+        units.push([p,q]); used.add(p.id);used.add(q.id);
+      } else { units.push([p]);used.add(p.id); }
+    }
+    return units;
+  }
+
+  function sitScore(p){
+    // Tie-breaker ONLY. Sit-out count is compared first as a hard priority.
+    const recent = state.round-p.lastSatRound<=1 ? 100000 : 0;
+    const newcomer = p.played===0 ? 1000000 : 0;
+    return recent + newcomer - (p.playStreak||0)*100 + Math.random();
+  }
+
+  // Bounded dynamic programming: select complete fixed-pair units to sit.
+  // Runtime grows with player count * number of sit-out slots, not combinations.
+  function chooseParticipants(players,capacity,mode){
+    if(players.length<=capacity)return {playing:[...players],waiting:[]};
+    const units=makeUnits(players),need=players.length-capacity;
+    // Lower scheduling sit-out totals sit first; first-game newcomers play first.
+    // Lexicographic fairness is approximated by a bounded weighted score.
+    function penalty(p){
+      const priority=p.firstGamePriority?1000000:0;
+      const recent=state.round-(p.lastSatRound??-999)<=1?1000:0;
+      return priority+100*Math.max(0,schedulingSit(p))+recent-0.4*(p.playStreak||0)+Math.random()*.15;
+    }
+    const dp=Array(need+1).fill(null);
+    dp[0]={cost:0,waiting:[]};
+    for(const u of shuffle(units)){
+      const cost=u.reduce((sum,p)=>sum+penalty(p),0);
+      for(let n=need;n>=u.length;n--){
+        const prior=dp[n-u.length];if(!prior)continue;
+        const score=prior.cost+cost;
+        if(!dp[n]||score<dp[n].cost)dp[n]={cost:score,waiting:[...prior.waiting,...u]};
+      }
+    }
+    if(!dp[need])return {playing:[],waiting:[...players]};
+    const waiting=dp[need].waiting,ids=new Set(waiting.map(p=>p.id));
+    return {playing:players.filter(p=>!ids.has(p.id)),waiting};
+  }
+
+  // Exact minimum-repeat teammate matching for ordinary Smart Random games.
+  // Dynamic programming over 4-player court partitions. This makes repeats
+  // strictly worse than any opponent-history tie-breaker.
+  function buildSmart(players){
+    if(players.length>8) return buildSmartFallback(players);
+    const n=players.length, full=(1<<n)-1, memo=new Map();
+    const fixedIndex=players.map(p=>players.findIndex(q=>q.id===effectivePartnerId(p)));
+    function solve(mask){
+      if(!mask) return {cost:0,courts:[]};
+      if(memo.has(mask)) return memo.get(mask);
+      const first=players.findIndex((_,i)=>mask&(1<<i));
+      let best={cost:Infinity,courts:[]};
+      const others=[];
+      for(let i=first+1;i<n;i++)if(mask&(1<<i))others.push(i);
+      for(let a=0;a<others.length;a++)for(let b=a+1;b<others.length;b++)for(let c=b+1;c<others.length;c++){
+        const inds=[first,others[a],others[b],others[c]];
+        if(inds.some(i=>fixedIndex[i]>=0 && !inds.includes(fixedIndex[i])))continue;
+        const group=inds.map(i=>players[i]);
+        const options=teamPairings(group).filter(respectsFixed);
+        for(const opt of options){
+          const repeat=partnerCount(opt[0][0],opt[0][1])+partnerCount(opt[1][0],opt[1][1]);
+          const repeatsAny=(partnerCount(opt[0][0],opt[0][1])>0?1:0)+(partnerCount(opt[1][0],opt[1][1])>0?1:0);
+          let opponents=0;
+          for(const x of opt[0])for(const y of opt[1])opponents+=opponentCount(x,y);
+          const rest=solve(mask^inds.reduce((m,i)=>m|(1<<i),0));
+          const cost=rest.cost+repeatsAny*1000000+repeat*10000+opponents*2+Math.random()*.05;
+          if(cost<best.cost)best={cost,courts:[opt,...rest.courts]};
+        }
+      }
+      memo.set(mask,best);
+      return best;
+    }
+    const result=solve(full);
+    return Number.isFinite(result.cost)?result.courts:buildSmartFallback(players);
+  }
+
+  // Court packing by indivisible player units; handles 20+ players with fixed pairs.
+  // Pack fixed pairs first, then singles, guaranteeing complete four-player courts.
+  function shuffledCourtGroups(players){
+    const units=makeUnits(players),pairs=shuffle(units.filter(u=>u.length===2)),solos=shuffle(units.filter(u=>u.length===1));
+    const courtCount=players.length/4;
+    if(!Number.isInteger(courtCount))return null;
+    const groups=Array.from({length:courtCount},()=>[]);
+    // Randomized distribution of pairs, never more than two pairs per court.
+    for(const pair of pairs){
+      const available=groups.filter(g=>g.length<=2);
+      if(!available.length)return null;
+      const min=Math.min(...available.map(g=>g.length));
+      const choices=available.filter(g=>g.length===min);
+      choices[Math.floor(Math.random()*choices.length)].push(...pair);
+    }
+    for(const group of groups)while(group.length<4){
+      if(!solos.length)return null;
+      group.push(...solos.splice(0,1)[0]);
+    }
+    return groups;
+  }
+  function buildSmartFallback(players){
+    let best=null,bestCost=Infinity;
+    const trials=players.length>=24?45:90;
+    for(let t=0;t<trials;t++){
+      const groups=shuffledCourtGroups(players);
+      if(!groups)continue;
+      let cost=0,round=[],ok=true;
+      for(const g of groups){
+        const pairing=bestTeams(g,'smart');
+        if(!pairing){ok=false;break;}
+        cost+=repeatCost(pairing,.1);round.push(pairing);
+      }
+      if(ok&&cost<bestCost){best=round;bestCost=cost;}
+    }
+    return best||[];
+  }
+
+  // A complete nine-player, two-court round-robin covers all 36 unique
+  // partnerships over nine games, with exactly one sit-out per person.
+  function ninePlayerSchedule(ids){
+    const order=shuffle(ids),schedule=[];
+    for(let r=0;r<9;r++){
+      const circle=[...order.slice(0,1),...order.slice(1)];
+      const teams=[];
+      for(let i=0;i<4;i++)teams.push([circle[i],circle[7-i]]);
+      const waiting=circle[8];
+      schedule.push({waiting,courts:[[teams[0],teams[1]],[teams[2],teams[3]]]});
+      order.splice(1,0,order.pop());
+    }
+    return schedule;
+  }
+
+  function getNinePlayerRound(actives){
+    const ids=actives.map(p=>p.id).sort(),signature=ids.join('|');
+    let plan=state.smartNinePlan;
+    if(!plan||plan.signature!==signature||plan.next>=9){
+      // Only begin a new complete cycle when prior pair histories permit it.
+      const noHistory=actives.every(p=>ids.every(id=>id===p.id||!(p.partners?.[id])));
+      if(!noHistory)return null;
+      plan={signature,next:0,rounds:ninePlayerSchedule(ids)};
+      state.smartNinePlan=plan;
+    }
+    const item=plan.rounds[plan.next++];
+    return {
+      playing:item.courts.flat(2).map(id=>state.players.find(p=>p.id===id)),
+      waiting:[state.players.find(p=>p.id===item.waiting)],
+      courts:item.courts.map(c=>c.map(t=>t.map(id=>state.players.find(p=>p.id===id))))
+    };
+  }
+
+  function buildSimilar(players){
+    let best=null,bestCost=Infinity;
+    const trials=players.length>=24?60:100;
+    for(let t=0;t<trials;t++){
+      const groups=shuffledCourtGroups(players);
+      if(!groups)continue;
+      let cost=0,round=[],ok=true;
+      for(const g of groups){
+        const rs=g.map(rating);
+        cost+=(Math.max(...rs)-Math.min(...rs))*45+groupRepeatCost(g)*.6;
+        const pairing=bestTeams(g,'similar');
+        if(!pairing){ok=false;break;}
+        round.push(pairing);
+      }
+      if(ok&&cost<bestCost){best=round;bestCost=cost;}
+    }
+    if(!best)return buildSmartFallback(players);
+    best.sort((x,y)=>y.flat().reduce((a,p)=>a+rating(p),0)-x.flat().reduce((a,p)=>a+rating(p),0));
+    return best;
+  }
+
+  function buildBalanced(players){
+    let best=null,bestCost=Infinity;
+    const trials=players.length>=24?60:100;
+    for(let t=0;t<trials;t++){
+      const groups=shuffledCourtGroups(players);
+      if(!groups)continue;
+      let ok=true,cost=0,round=[];
+      for(const g of groups){
+        const pairing=bestTeams(g,'balanced');
+        if(!pairing){ok=false;break;}
+        const diff=teamBalanceCost(pairing);
+        cost += diff<=.25 ? diff*2 : diff<=.5 ? 2+diff*8 : 30+diff*30;
+        cost += repeatCost(pairing,.5);
+        round.push(pairing);
+      }
+      if(ok && cost<bestCost){best=round;bestCost=cost;}
+    }
+    return best||buildSmart(players).map(pair=>bestTeams(pair.flat(),'balanced'));
+  }
+
+  function expectedScore(teamA,teamB){
+    const a=teamTotal(teamA)/2,b=teamTotal(teamB)/2;
+    return 1/(1+Math.pow(10,(b-a)/1.5));
+  }
+  function finalizeAdaptiveResults(){
+    const cr=state.currentRound;
+    if(!cr || cr.adaptiveApplied) return;
+    (cr.results||[]).forEach((winner,idx)=>{
+      if(!winner) return;
+      const court=cr.courts[idx];
+      const A=court[0].map(id=>state.players.find(p=>p.id===id)).filter(Boolean);
+      const B=court[1].map(id=>state.players.find(p=>p.id===id)).filter(Boolean);
+      const expA=expectedScore(A,B), actualA=winner==='A'?1:0;
+      const delta=actualA-expA;
+      for(const p of A){
+        p.resultGames=(p.resultGames||0)+1;
+        if(p.resultGames>3){
+          const k=p.resultGames<=5?.12:p.resultGames<=10?.08:.05;
+          p.adaptiveRating=Math.max(1,Math.min(5,(Number.isFinite(p.adaptiveRating)?p.adaptiveRating:3.0)+k*delta));
+        }
+      }
+      for(const p of B){
+        p.resultGames=(p.resultGames||0)+1;
+        if(p.resultGames>3){
+          const k=p.resultGames<=5?.12:p.resultGames<=10?.08:.05;
+          p.adaptiveRating=Math.max(1,Math.min(5,(Number.isFinite(p.adaptiveRating)?p.adaptiveRating:3.0)-k*delta));
+        }
+      }
+    });
+    cr.adaptiveApplied=true;
+  }
+
+  function makeRound(skipPairPrompt=false){
+    pairSeparationPaused=false;
+    if(state.currentRound){
+      finalizeAdaptiveResults();
+      finalizeLeavers();
+    }
+    state.courts = Math.min(8, Math.max(1, Number($('courtCount').value)||1));
+    state.mode = $('modeSelect').value;
+    state.endType = $('sessionEndType').value;
+    state.endTime = $('endTime').value;
+
+    const voluntarySitters=state.players.filter(p=>(p.status==='active'||p.status==='leaving') && p.sitNext);
+    const actives=activePlayers();
+    if(actives.length<4){
+      alert('You need at least 4 active players to create a round.');
+      return;
+    }
+    const fullCourts=Math.min(state.courts, Math.floor(actives.length/4));
+    const capacity=fullCourts*4;
+    if(!skipPairPrompt && maybeSuggestPairBreak(actives,capacity)) return;
+    let forcedSitter=null;
+    if(state.temporaryPair?.remaining>0){
+      const index=2-state.temporaryPair.remaining;
+      forcedSitter=actives.find(p=>p.id===state.temporaryPair.ids[index])||null;
+    }
+    // When no player can sit (all available courts are full), postpone the
+    // approved two-game separation instead of trying to remove a 33rd player
+    // from a 32-player rotation or breaking the fixed pair.
+    if(forcedSitter && actives.length<=capacity){
+      forcedSitter=null;
+      pairSeparationPaused=true;
+    }
+    const eligible=forcedSitter?actives.filter(p=>p.id!==forcedSitter.id):actives;
+    const selected=chooseParticipants(eligible,capacity,state.mode);
+    const playing=selected.playing, waiting=[...selected.waiting,...(forcedSitter?[forcedSitter]:[])];
+    if(playing.length!==capacity){
+      alert('Cannot fill all courts while keeping fixed pairs together. Please adjust courts or pairings.');
+      return;
+    }
+    // Voluntary one-round sitters are displayed with everyone sitting this round,
+    // but they do not count as algorithm-assigned fairness sit-outs.
+    const displayWaiting=[...waiting,...voluntarySitters];
+
+    let courts;
+    if(state.mode==='similar') courts=buildSimilar(playing);
+    else if(state.mode==='balanced') courts=buildBalanced(playing);
+    else courts=buildSmart(playing);
+
+    if(courts.length!==fullCourts || courts.some(c=>!c || c.length!==2 || c.some(t=>!t || t.length!==2))){
+      alert('Unable to form valid teams with the current pairings. Try adjusting pairings or court count.');
+      return;
+    }
+    state.round += 1;
+
+    // "Sit Out" lasts exactly one round. It counts as a real sit for fairness,
+    // so the player is strongly protected from sitting again immediately.
+    voluntarySitters.forEach(p=>{
+      p.sitNext=false;
+      p.sat += 1;
+      p.lastSatRound = state.round;
+      p.playStreak=0;
+    });
+
+    // Update algorithm-assigned sit statistics/history.
+    for(const p of waiting){
+      p.sat += 1;
+      p.lastSatRound = state.round;
+      p.playStreak=0;
+    }
+    for(const pairing of courts){
+      const [[a,b],[c,d]]=pairing;
+      for(const p of [a,b,c,d]){ p.played += 1; p.firstGamePriority=false; p.playStreak=(p.playStreak||0)+1; }
+      incrementMap(a.partners,b.id); incrementMap(b.partners,a.id);
+      incrementMap(c.partners,d.id); incrementMap(d.partners,c.id);
+      for(const x of [a,b]) for(const y of [c,d]){
+        incrementMap(x.opponents,y.id); incrementMap(y.opponents,x.id);
+      }
+    }
+
+    if(state.temporaryPair?.remaining>0 && !pairSeparationPaused){
+      state.temporaryPair.remaining--;
+      if(state.temporaryPair.remaining===0) state.temporaryPair=null;
+    }
+
+    state.currentRound = {
+      number:state.round,
+      courts:courts.map(pair=>pair.map(team=>team.map(p=>p.id))),
+      waiting:displayWaiting.map(p=>p.id),
+      mode:state.mode,
+      results:courts.map(()=>null)
+    };
+
+    save(); render();
+  }
+
+  function nameById(id){ return state.players.find(p=>p.id===id)?.name || 'Unknown'; }
+  function skillById(id){ return state.players.find(p=>p.id===id)?.skill ?? null; }
+
+  function renderPlayers(){
+    const list=$('playerList'); list.innerHTML='';
+    const visible=state.players.filter(p=>p.status!=='left');
+    for(const p of visible.sort((a,b)=>a.name.localeCompare(b.name,undefined,{sensitivity:"base"}))){
+      const row=document.createElement('div');
+      row.className='player-row '+(p.sitNext?'temp ':'')+(p.status==='leaving'?'leaving':'');
+      const partner=state.players.find(x=>x.id===p.fixedPartnerId);
+      const skillValues=['','1.0','1.25','1.5','1.75','2.0','2.25','2.5','2.75','3.0','3.25','3.5','3.75','4.0','4.25','4.5','4.75','5.0','5.25'];
+      const skillOptions=skillValues.map(v=>`<option value="${v}" ${(v===''&&p.skill==null)||(v!==''&&Number(v)===p.skill)?'selected':''}>${v===''?'Unrated':(v==='5.25'?'5.0+':v)}</option>`).join('');
+      const pairOptions=visible.filter(x=>x.id!==p.id && !x.sitNext).map(x=>
+        `<option value="${x.id}" ${p.fixedPartnerId===x.id?'selected':''}>Pair: ${escapeHtml(x.name)}</option>`).join('');
+      row.innerHTML=`
+        <div style="min-width:0">
+          <div class="player-name" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span>${escapeHtml(p.name)}</span>
+            <select data-action="skill" title="Player skill rating" style="width:auto;min-width:92px;padding:4px 6px">${skillOptions}</select>
+          </div>
+          <div class="tiny">${isZoned()?`<span class="g2-roster-tag" style="color:${zoneColor(currentZone(p))}">${escapeHtml(zoneName(currentZone(p)))}</span> · `:""}${statusLabel(p.status)}${p.pendingZone!==undefined?" · Moving after game":""}${partner?' · Team: '+escapeHtml(partner.name):''}</div>
+        </div>
+        <div class="status-menu">
+          <button data-action="sit" class="${p.sitNext?'selected':''}">Sit Out</button>
+          <select data-action="pair" title="Fixed team for this session" style="max-width:150px">
+            <option value="">Solo</option>${pairOptions}
+          </select>
+         
+          <button data-action="adaptive" class="${p.useAdaptive===true && Number.isFinite(p.adaptiveRating)?'selected':''}" ${!Number.isFinite(p.adaptiveRating)?'disabled':''}>Adaptive: ${Number.isFinite(p.adaptiveRating) ? (p.useAdaptive===true?'ON':'OFF') : '—'}</button>
+          <button data-action="left">Leave</button>
+        </div>`;
+      row.querySelector('[data-action="sit"]').onclick=()=>toggleSit(p.id);
+      row.querySelector('[data-action="skill"]').onchange=e=>setSkill(p.id,e.target.value);
+      row.querySelector('[data-action="pair"]').onchange=e=>setPair(p.id,e.target.value||null);
+     
+      row.querySelector('[data-action="adaptive"]').onclick=()=>{if(!Number.isFinite(p.adaptiveRating))return;p.useAdaptive=p.useAdaptive!==true;save();render();};
+      row.querySelector('[data-action="left"]').onclick=()=>setStatus(p.id,'left');
+      list.appendChild(row);
+    }
+
+    const left=state.players.filter(p=>p.status==='left');
+    $('leftSummary').textContent=`Left session (${left.length})`;
+    $('leftList').innerHTML='';
+    for(const p of left){
+      const row=document.createElement('div');
+      row.className='player-row';
+      row.innerHTML=`<div><div class="player-name">${escapeHtml(p.name)}</div><div class="tiny">History preserved</div></div><button>Restore</button>`;
+      row.querySelector('button').onclick=()=>restorePlayer(p.id);
+      $('leftList').appendChild(row);
+    }
+    $('activeCountPill').textContent=`${activePlayers().length} active`;
+  }
+
+
+  function recordResult(courtIndex,winner){
+    const cr=state.currentRound;if(!cr)return;
+    cr.results=cr.results||cr.courts.map(()=>null);
+    const prev=cr.results[courtIndex], court=cr.courts[courtIndex];
+    function apply(which,delta){
+      if(which!=='A'&&which!=='B')return;
+      const win=which==='A'?court[0]:court[1], lose=which==='A'?court[1]:court[0];
+      win.forEach(id=>{const p=state.players.find(x=>x.id===id);if(p)p.wins=Math.max(0,(p.wins||0)+delta)});
+      lose.forEach(id=>{const p=state.players.find(x=>x.id===id);if(p)p.losses=Math.max(0,(p.losses||0)+delta)});
+    }
+    apply(prev,-1); cr.results[courtIndex]=winner; apply(winner,1);
+    save();render();
+  }
+  function finalizeLeavers(){}
+
+  function nextButtonHtml(label){ return `<img class="next-logo" src="nextcuatro-logo.png" alt="">${escapeHtml(label)}`; }
+
+  function renderRound(){
+    const area=$('courtArea'); area.innerHTML='';
+    const cr=state.currentRound;
+    if(!cr){
+      $('emptyState').style.display='block';
+      $('roundTitle').textContent='Ready to start';
+      $('statsLine').textContent='Add players, choose a mode, then create the first game.';
+      $('waitingBox').style.display='none';
+      $('nextRoundBtn').innerHTML=nextButtonHtml('Next Cuatro!');
+      return;
+    }
+    $('emptyState').style.display='none';
+    $('roundTitle').textContent=`Game ${cr.number}`;
+    const activeN=activePlayers().length;
+    $('statsLine').textContent=`${cr.courts.length} courts · ${activeN} currently active · ${cr.waiting.length} sitting this game out`;
+    cr.courts.forEach((court,idx)=>{
+      const card=document.createElement('div');
+      card.className='court';
+      const t1=court[0].map(nameById);
+      const t2=court[1].map(nameById);
+      const result=(cr.results||[])[idx]??null;
+      card.innerHTML=`
+        <h3>COURT ${idx+1}</h3>
+        <button class="team team-pick ${result==='A'?'selected':''}" data-result="A" title="Tap to record this team as winner"><span class="team-row"><span>${escapeHtml(t1[0])} + ${escapeHtml(t1[1])}</span>${result==='A'?'<span class="winner-label">WINNER</span>':''}</span></button>
+        <div class="vs">serves to</div>
+        <button class="team team-pick ${result==='B'?'selected':''}" data-result="B" title="Tap to record this team as winner"><span class="team-row"><span>${escapeHtml(t2[0])} + ${escapeHtml(t2[1])}</span>${result==='B'?'<span class="winner-label">WINNER</span>':''}</span></button>`;
+      card.querySelectorAll('[data-result]').forEach(btn=>btn.onclick=()=>recordResult(idx,btn.dataset.result));
+      area.appendChild(card);
+    });
+    if(cr.waiting.length){
+      $('waitingBox').style.display='block';
+      $('waitingBox').innerHTML=`<strong>Sitting this game out:</strong> ${cr.waiting.map(nameById).map(escapeHtml).join(', ')}`;
+    } else $('waitingBox').style.display='none';
+    $('nextRoundBtn').innerHTML=nextButtonHtml('Next Cuatro!');
+  }
+
+  function renderStats(){
+    const body=$('statsBody'); body.innerHTML='';
+    const ordered=[...state.players].sort((a,b)=>String(a.name??'').localeCompare(String(b.name??'')));
+    for(const p of ordered){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td>${escapeHtml(p.name??'')}</td>
+        <td>${Number(p.played)||0}</td>
+        <td>${Number(p.sat)||0}</td>
+        <td>${Number(p.wins)||0}–${Number(p.losses)||0}</td>
+        <td>${p.skill!=null && Number.isFinite(p.adaptiveRating) ? Number(p.adaptiveRating).toFixed(2) : '—'}</td>
+        <td>${Object.keys(p.partners||{}).length}</td>
+        <td>${statusLabel(p.status||'active')}</td>`;
+      body.appendChild(tr);
+    }
+  }
+
+  function statusLabel(s){
+    return ({active:'Active',leaving:'Leaving after this round',left:'Left session'})[s]||s;
+  }
+
+  function renderReservation(){
+    $('endTimeWrap').style.display = $('sessionEndType').value==='until' ? 'block' : 'none';
+    if(state.endType==='until' && state.endTime){
+      $('reservationNote').textContent=`Courts reserved until ${formatTime(state.endTime)}.`;
+    } else $('reservationNote').textContent='Open-ended session.';
+  }
+
+  function render(){
+    normalizeZonePools();
+    $('sessionMode').value=state.pendingMode||state.sessionMode;
+    const pending=!!state.pendingMode;
+    $('modePending').hidden=!pending;$('applyMode').hidden=!pending;$('cancelMode').hidden=!pending;
+    $('courtSetup').hidden=!isZoned();
+    $('zoneArea').hidden=!isZoned();
+    $('courtArea').hidden=isZoned();$('emptyState').hidden=isZoned();$('waitingBox').hidden=isZoned();
+    $('nextRoundBtn').hidden=isZoned();document.querySelector('.timerbar').hidden=isZoned();
+    $('courtCount').disabled=isZoned();
+    if(isZoned())renderZones();
+    $('courtCount').value=state.courts;
+    $('sessionEndType').value=state.endType;
+    $('endTime').value=state.endTime;
+    $('modeSelect').value=state.mode;
+    $('timerMinutes').value=String(state.timerMinutes??12);
+    renderPlayers(); renderStats(); if(!isZoned())renderRound(); renderReservation();
+  }
+
+  function moveToZone(p,newZone){
+    state.zonePools[p.id]=newZone;delete p.pendingZone;
+    const peers=state.players.filter(q=>q.id!==p.id&&q.status==='active'&&currentZone(q)===newZone);
+    const sorted=peers.map(schedulingSit).sort((a,b)=>a-b);
+    if(sorted.length){const m=Math.floor(sorted.length/2);const baseline=sorted.length%2?sorted[m]:(sorted[m-1]+sorted[m])/2;p.fairnessOffset=baseline-(p.sat||0)}
+    p.firstGamePriority=true;
+  }
+  function releasePendingPlayers(zoneId){
+    const stillPlaying=new Set(Object.entries(state.zoneRounds||{}).filter(([id])=>id!==zoneId).flatMap(([,r])=>(r.currentRound?.courts||[]).flat(2)));
+    for(const p of state.players){if(p.pendingZone!==undefined&&currentZone(p)===zoneId&&!stillPlaying.has(p.id))moveToZone(p,p.pendingZone)}
+  }
+  function zoneAdvance(id){
+    if(!isZoned())return;
+    const courtNumbers=state.zoneCourts.map((v,i)=>v===id?i+1:null).filter(Boolean);
+    if(!courtNumbers.length)return alert('Assign at least one court to this zone first.');
+    const zr=state.zoneRounds[id]||(state.zoneRounds[id]={round:0,currentRound:null});
+    const players=state.players.filter(p=>p.status==='active'&&currentZone(p)===id);
+    const sitters=players.filter(p=>p.sitNext);
+    const eligible=players.filter(p=>!p.sitNext);
+    const fullCourts=Math.min(courtNumbers.length,Math.floor(eligible.length/4));
+    if(!fullCourts)return alert('This zone needs at least four available players.');
+    // Fixed teams must be scheduled together; if capacity is incompatible, do not change any data.
+    for(const p of eligible){if(p.fixedPartnerId&&!eligible.some(q=>q.id===p.fixedPartnerId))return alert('A fixed partner is unavailable or in another zone. Unpair or correct the players before rotating.');}
+    const selected=chooseParticipants(eligible,fullCourts*4,state.mode);
+    if(selected.playing.length!==fullCourts*4)return alert('Cannot fill courts while keeping fixed pairs together. Adjust courts or pairings.');
+    let courts;
+    try{courts=state.mode==='similar'?buildSimilar(selected.playing):state.mode==='balanced'?buildBalanced(selected.playing):buildSmart(selected.playing)}catch(e){alert('Unable to create a valid rotation: '+e.message);return}
+    if(courts.length!==fullCourts||courts.some(c=>c.length!==2||c.some(t=>t.length!==2)))return alert('Unable to create valid teams.');
+    if(zr.currentRound){const original=state.currentRound;state.currentRound=zr.currentRound;finalizeAdaptiveResults();state.currentRound=original;}
+    zr.round++;
+    for(const p of sitters){p.sitNext=false;p.sat++;p.lastSatRound=zr.round;p.playStreak=0}
+    for(const p of selected.waiting){p.sat++;p.lastSatRound=zr.round;p.playStreak=0}
+    for(const [[a,b],[c,d]] of courts){for(const p of [a,b,c,d]){p.played++;p.firstGamePriority=false;p.playStreak=(p.playStreak||0)+1}incrementMap(a.partners,b.id);incrementMap(b.partners,a.id);incrementMap(c.partners,d.id);incrementMap(d.partners,c.id);for(const x of [a,b])for(const y of [c,d]){incrementMap(x.opponents,y.id);incrementMap(y.opponents,x.id)}}
+    zr.currentRound={number:zr.round,courts:courts.map(pair=>pair.map(team=>team.map(p=>p.id))),courtNumbers:courtNumbers.slice(0,fullCourts),waiting:[...selected.waiting,...sitters].map(p=>p.id),results:courts.map(()=>null),mode:state.mode};
+    releasePendingPlayers(id);save();render();
+  }
+  function zoneResult(id,index,winner){
+    const cr=state.zoneRounds[id]?.currentRound;if(!cr)return;
+    const prev=cr.results[index],court=cr.courts[index];
+    const apply=(side,d)=>{if(!side)return;for(const pid of court[side==='A'?0:1]){const p=state.players.find(x=>x.id===pid);if(p)p.wins=Math.max(0,(p.wins||0)+d)}for(const pid of court[side==='A'?1:0]){const p=state.players.find(x=>x.id===pid);if(p)p.losses=Math.max(0,(p.losses||0)+d)}};
+    apply(prev,-1);cr.results[index]=winner;apply(winner,1);save();render();
+  }
+  function renderZones(){
+    const setup=$('zoneCourtSetup');setup.innerHTML='';
+    for(let i=0;i<8;i++){
+      const el=document.createElement('div');el.className='g2-court-choice';
+      el.innerHTML=`<label>COURT ${i+1}</label><select><option value="">Unassigned / Available</option>${ZONES.map(z=>`<option value="${z.id}" ${state.zoneCourts[i]===z.id?'selected':''}>${z.name}</option>`).join('')}</select>`;
+      el.querySelector('select').onchange=e=>{
+        const old=state.zoneCourts[i],next=e.target.value||null;
+        if(old!==next&&old&&state.zoneRounds[old]?.currentRound?.courtNumbers?.includes(i+1)&&!confirm('Court '+(i+1)+' has a displayed game. Change its zone only after that game finishes. Continue?')){render();return}
+        state.zoneCourts[i]=next;
+        // Invalidate only affected current court displays; preserve all player stats.
+        for(const zid of [old,next]){if(zid&&state.zoneRounds[zid]?.currentRound){delete state.zoneRounds[zid].currentRound}}
+        save();render();
+      };
+      setup.appendChild(el);
+    }
+    const area=$('zoneArea');area.innerHTML='';
+    const select=document.createElement('div');select.className='g2-mobile-zone';select.innerHTML='<label for="mobileZoneSelect">View skill zone</label><select id="mobileZoneSelect"></select>';
+    const pick=select.querySelector('select');pick.innerHTML=ZONES.map(z=>`<option value="${z.id}" ${state.mobileZone===z.id?'selected':''}>${z.name}</option>`).join('');
+    if(!state.mobileZone)state.mobileZone='developing';pick.value=state.mobileZone;pick.onchange=e=>{state.mobileZone=e.target.value;save();renderZones()};area.appendChild(select);
+    for(const z of ZONES){
+      const numbers=state.zoneCourts.map((v,i)=>v===z.id?i+1:null).filter(Boolean);
+      if(!numbers.length)continue;
+      const zr=state.zoneRounds[z.id],cr=zr?.currentRound;
+      const players=state.players.filter(p=>p.status==='active'&&currentZone(p)===z.id);
+      const box=document.createElement('section');box.className='g2-zone';box.style.setProperty('--zone',z.color);box.style.setProperty('--ink',z.ink);box.dataset.hiddenMobile=state.mobileZone!==z.id?'true':'false';
+      box.innerHTML=`<div class="g2-zone-head"><h3>${z.name}</h3><span>Round ${zr?.round||0} · Courts ${numbers.join(', ')} · ${players.length} players</span></div><div class="g2-zone-courts"></div><div class="g2-zone-wait"></div><button class="g2-next" ${players.length<4?'disabled':''}>Next Cuatro! · ${z.name}</button>`;
+      const courtBox=box.querySelector('.g2-zone-courts');
+      if(cr){cr.courts.forEach((court,i)=>{const card=document.createElement('div');card.className='court';const r=cr.results?.[i];card.innerHTML=`<h3>COURT ${cr.courtNumbers[i]}</h3><button class="team team-pick ${r==='A'?'selected':''}" data-win="A">${court[0].map(nameById).map(escapeHtml).join(' + ')} ${r==='A'?'✓ WINNER':''}</button><div class="vs">serves to</div><button class="team team-pick ${r==='B'?'selected':''}" data-win="B">${court[1].map(nameById).map(escapeHtml).join(' + ')} ${r==='B'?'✓ WINNER':''}</button>`;card.querySelectorAll('[data-win]').forEach(b=>b.onclick=()=>zoneResult(z.id,i,b.dataset.win));courtBox.appendChild(card)});
+        box.querySelector('.g2-zone-wait').textContent=cr.waiting.length?'Sitting this round: '+cr.waiting.map(nameById).join(', '):'No players sitting this round.';
+      }else courtBox.innerHTML='<div class="subtle">Ready for this zone’s first rotation.</div>';
+      box.querySelector('.g2-next').onclick=()=>zoneAdvance(z.id);area.appendChild(box);
+    }
+    const unassigned=state.players.filter(p=>p.status==='active'&&!currentZone(p));if(unassigned.length){const b=document.createElement('div');b.className='g2-unassigned';b.textContent='Unassigned (enter a rating of 2.0 or higher): '+unassigned.map(p=>p.name).join(', ');area.appendChild(b)}
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  }
+  function formatTime(v){
+    if(!v) return '';
+    const [h,m]=v.split(':').map(Number);
+    const d=new Date(); d.setHours(h,m,0,0);
+    return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+  }
+
+
+  let timerInterval=null,timerRemaining=(state.timerMinutes||12)*60;
+  function renderTimer(){
+    const mins=Number($('timerMinutes').value);
+    const m=Math.floor(timerRemaining/60),s=timerRemaining%60;
+    $('timerDisplay').classList.remove('timer-ended');$('timerDisplay').textContent=`${m}:${String(s).padStart(2,'0')}`;
+  }
+  function resetTimer(){
+    if(timerInterval){clearInterval(timerInterval);timerInterval=null}
+    const mins=Number($('timerMinutes').value);state.timerMinutes=mins;save();
+    timerRemaining=mins*60;$('timerStartBtn').textContent='Start';renderTimer();
+  }
+  let audioCtx=null;
+  function ensureAudio(){
+    try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();}catch(e){}
+  }
+  function playEndAlert(){
+    try{
+      ensureAudio(); if(!audioCtx)return;
+      const now=audioCtx.currentTime+.03;
+      const starts=[0,.48,.96,1.85,2.33,2.81];
+      starts.forEach((off,i)=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.type='square';o.frequency.value=[880,1047,880,880,1047,880][i];
+        g.gain.setValueAtTime(.0001,now+off);g.gain.exponentialRampToValueAtTime(.34,now+off+.018);
+        g.gain.setValueAtTime(.34,now+off+.27);g.gain.exponentialRampToValueAtTime(.0001,now+off+.38);
+        o.connect(g);g.connect(audioCtx.destination);o.start(now+off);o.stop(now+off+.4);
+      });
+    }catch(e){}
+  }
+
+  function toggleTimer(){
+    const mins=Number($('timerMinutes').value);ensureAudio();
+    if(timerInterval){clearInterval(timerInterval);timerInterval=null;$('timerStartBtn').textContent='Resume';return;}
+    if(timerRemaining<=0)timerRemaining=mins*60;
+    $('timerStartBtn').textContent='Pause';
+    timerInterval=setInterval(()=>{timerRemaining--;renderTimer();if(timerRemaining<=0){clearInterval(timerInterval);timerInterval=null;$('timerDisplay').textContent='END OF TIMED GAME';$('timerDisplay').classList.add('timer-ended');$('timerStartBtn').textContent='Start';playEndAlert();try{navigator.vibrate&&navigator.vibrate([300,150,300,450,300,150,300])}catch(e){}}},1000);
+  }
+
+  $('sessionMode').onchange=e=>{
+    const wanted=e.target.value;if(wanted===state.sessionMode){state.pendingMode=null;save();render();return}
+    state.pendingMode=wanted;save();render();
+  };
+  $('cancelMode').onclick=()=>{state.pendingMode=null;save();render()};
+  $('applyMode').onclick=()=>{
+    if(!state.pendingMode)return;
+    if(!confirm('Confirm all current games have finished. Apply the mode change now?'))return;
+    if(state.sessionMode==='zoned'){
+      for(const zr of Object.values(state.zoneRounds||{})){if(zr.currentRound){const original=state.currentRound;state.currentRound=zr.currentRound;finalizeAdaptiveResults();state.currentRound=original}}
+      for(const p of state.players){if(p.pendingZone!==undefined)moveToZone(p,p.pendingZone)}
+    }else if(state.currentRound){finalizeAdaptiveResults()}
+    state.sessionMode=state.pendingMode;state.pendingMode=null;
+    if(isZoned()){state.zoneRounds={};for(const p of state.players)moveToZone(p,zoneFor(p))}
+    else state.currentRound=null;
+    save();render();
+  };
+  $('addPlayerBtn').onclick=addPlayer;
+  $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter') addPlayer();});
+  $('nextRoundBtn').onclick=()=>{if(isZoned())return;resetTimer();makeRound();};
+  $('timerStartBtn').onclick=toggleTimer;
+  $('timerResetBtn').onclick=resetTimer;
+  $('timerMinutes').onchange=resetTimer;
+  $('courtCount').onchange=()=>{state.courts=Math.min(8,Math.max(1,Number($('courtCount').value)||1));save();render();};
+  $('modeSelect').onchange=()=>{state.mode=$('modeSelect').value;save();};
+  $('sessionEndType').onchange=()=>{state.endType=$('sessionEndType').value;save();renderReservation();};
+  $('endTime').onchange=()=>{state.endTime=$('endTime').value;save();renderReservation();};
+
+  $('resetBtn').onclick=()=>{
+    if(confirm('This will clear all players and data to start a new session.')){
+      state=structuredClone(defaultState); save(); render();
+    }
+  };
+
+
+  render();
+  timerRemaining=(state.timerMinutes||12)*60;renderTimer();
+})();
+</script>
+</body>
+</html>
